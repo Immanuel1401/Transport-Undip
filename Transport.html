@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hasil Survei Transportasi</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: white;
+            padding: 40px;
+            text-align: center;
+            position: relative;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="white" opacity="0.1"/><circle cx="80" cy="40" r="1.5" fill="white" opacity="0.1"/><circle cx="40" cy="80" r="1" fill="white" opacity="0.1"/></svg>');
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header .date {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .bus-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .info-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            border-left: 5px solid #4f46e5;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        }
+
+        .info-card h3 {
+            color: #4f46e5;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .info-card .icon {
+            width: 24px;
+            height: 24px;
+            background: #4f46e5;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .schedule-section {
+            background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .schedule-title {
+            color: #1e293b;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #4f46e5;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 30px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -22px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 12px;
+            height: 12px;
+            background: #4f46e5;
+            border-radius: 50%;
+            border: 3px solid white;
+        }
+
+        .timeline-date {
+            font-weight: bold;
+            color: #4f46e5;
+            font-size: 1.1rem;
+        }
+
+        .timeline-location {
+            color: #64748b;
+            margin: 5px 0;
+        }
+
+        .timeline-time {
+            color: #059669;
+            font-weight: bold;
+        }
+
+        .suggestions-section {
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 30px;
+        }
+
+        .suggestions-title {
+            color: #92400e;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .suggestion-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .suggestion-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            border-left: 4px solid #f59e0b;
+        }
+
+        .suggestion-card h4 {
+            color: #92400e;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .price-highlight {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .price-main {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .price-dp {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .facilities {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .facility-tag {
+            background: #e0e7ff;
+            color: #4f46e5;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .warning {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px 0;
+            color: #dc2626;
+        }
+
+        .warning h4 {
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .documentation-section {
+            background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 30px;
+        }
+
+        .documentation-title {
+            color: #1e293b;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .documentation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .doc-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .doc-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        }
+
+        .doc-image-placeholder {
+            width: 100%;
+            height: 200px;
+            margin-bottom: 15px;
+            position: relative;
+            overflow: hidden;
+            border-radius: 10px;
+        }
+
+        .upload-area {
+            width: 100%;
+            height: 100%;
+            border: 2px dashed #e2e8f0;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #f8fafc;
+        }
+
+        .upload-area:hover {
+            border-color: #4f46e5;
+            background: #f0f9ff;
+        }
+
+        .upload-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: #64748b;
+        }
+
+        .upload-text {
+            font-weight: bold;
+            color: #374151;
+            margin-bottom: 5px;
+        }
+
+        .upload-subtext {
+            font-size: 0.8rem;
+            color: #6b7280;
+            text-align: center;
+        }
+
+        .doc-card h4 {
+            color: #1e293b;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .doc-card p {
+            color: #64748b;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .upload-instructions {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            border-left: 4px solid #3b82f6;
+        }
+
+        .upload-instructions h4 {
+            color: #1e40af;
+            margin-bottom: 12px;
+        }
+
+        .upload-instructions ul {
+            color: #475569;
+            padding-left: 20px;
+        }
+
+        .upload-instructions li {
+            margin-bottom: 5px;
+        }
+        
+        .lightbox {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            padding: 40px;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background: rgba(0, 0, 0, 0.9);
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .lightbox-content {
+            max-width: 90%;
+            max-height: 80%;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+            animation: zoomIn 0.3s ease;
+        }
+
+        #caption {
+            margin-top: 15px;
+            color: #f1f1f1;
+            text-align: center;
+            font-size: 1rem;
+        }
+
+        .lightbox .close {
+            position: absolute;
+            top: 20px;
+            right: 35px;
+            color: #fff;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .lightbox .close:hover {
+            color: #bbb;
+        }
+
+        @keyframes zoomIn {
+            from {transform: scale(0.7); opacity: 0;}
+            to {transform: scale(1); opacity: 1;}
+        }
+
+        .zoomable {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .zoomable:hover {
+            transform: scale(1.05);
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .bus-info {
+                grid-template-columns: 1fr;
+            }
+
+            .documentation-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚌 HASIL SURVEI TRANSPORTASI</h1>
+            <div class="date">Minggu, 7 September 2025</div>
+        </div>
+
+        <div class="content">
+            <!-- Bus Information -->
+            <div class="bus-info">
+                <div class="info-card">
+                    <h3><span class="icon">🏢</span>Perusahaan Otobus</h3>
+                    <p><strong>P.O. Djoko Kendil</strong></p>
+                    <p>Jl. Djoko Kendil – Puri – Mojokerto</p>
+                </div>
+
+                <div class="info-card">
+                    <h3><span class="icon">🚌</span>Spesifikasi Bus</h3>
+                    <p><strong>Kapasitas:</strong> 60 seat (tata letak 2-3)</p>
+                    <p><strong>Crew:</strong> 2 orang (Sopir & Kernet)</p>
+                    <div class="facilities">
+                        <span class="facility-tag">❄️ AC</span>
+                        <span class="facility-tag">🚰 Dispenser</span>
+                        <span class="facility-tag">🔌 Cas HP</span>
+                        <span class="facility-tag">📺 Smart TV</span>
+                        <span class="facility-tag">🎤 Audio Karaoke</span>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <h3><span class="icon">🛣️</span>Rute Perjalanan</h3>
+                    <p><strong>Via:</strong> Tol Tengah Jawa (Solo-Madiun)</p>
+                    <p><strong>Tidak lewat:</strong> Pantura</p>
+                </div>
+            </div>
+
+            <!-- Price Information -->
+            <div class="price-highlight">
+                <div class="price-main">Rp 7.800.000</div>
+                <div class="price-dp">DP Minimal: Rp 1.950.000 (25%)</div>
+                <div style="margin-top: 10px; font-size: 0.9rem;">
+                    *Include BBM, Sopir, Tol<br>
+                    DP dibayar tanggal 9/10 September
+                </div>
+            </div>
+
+            <!-- Schedule -->
+            <div class="schedule-section">
+                <h2 class="schedule-title">📅 Jadwal Perjalanan</h2>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-date">17 September 2025</div>
+                        <div class="timeline-location">📍 Universitas Airlangga Kampus C</div>
+                        <div class="timeline-time">⏰ Tiba: 22.00 WIB (Toleransi: 23.00 WIB)</div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-date">18 September 2025</div>
+                        <div class="timeline-location">📍 Universitas Diponegoro</div>
+                        <div class="timeline-time">⏰ Tiba: 05.00-06.00 WIB | Keluar: 16.00 WIB (Toleransi)</div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-date">Kembali ke Surabaya</div>
+                        <div class="timeline-location">📍 Surabaya</div>
+                        <div class="timeline-time">⏰ Tiba: 22.00-23.00 WIB (Toleransi: 01.00 dini hari)</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Warning -->
+            <div class="warning">
+                <h4>⚠️ Penting untuk Diperhatikan</h4>
+                <p>Wisata malam di Semarang rata-rata tutup pukul 17.00 WIB. Tidak memungkinkan untuk ke bagian atas Kota Semarang.</p>
+            </div>
+
+            <!-- Suggestions -->
+            <div class="suggestions-section">
+                <h2 class="suggestions-title">💡 SARAN & REKOMENDASI</h2>
+                <div class="suggestion-grid">
+                    <div class="suggestion-card">
+                        <h4>🛁 Rest Area Boyolali</h4>
+                        <p><strong>Waktu:</strong> 04.00 WIB (Toleransi: 05.00 WIB)</p>
+                        <p><strong>Aktivitas:</strong> Mandi atau makan</p>
+                    </div>
+
+                    <div class="suggestion-card">
+                        <h4>🛍️ Tempat Wisata & Belanja</h4>
+                        <p><strong>PSC Madiun:</strong> Sampai 19.00 WIB (Toleransi: 21.00 WIB)</p>
+                        <p><strong>Alternatif:</strong> Masjid Surakarta (Solo)</p>
+                    </div>
+
+                    <div class="suggestion-card">
+                        <h4>💰 Tips Sopir</h4>
+                        <p><strong>Saran:</strong> Rp 150.000 per orang</p>
+                        <p><strong>Penambahan Budget:</strong> Rp 50.000</p>
+                    </div>
+
+                    <div class="suggestion-card">
+                        <h4>🅿️ Biaya Parkir</h4>
+                        <p><strong>Total:</strong> Rp 100.000</p>
+                        <p><strong>Penambahan Budget:</strong> Rp 50.000</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Documentation Section -->
+            <div class="documentation-section">
+                <h2 class="documentation-title">📷 Dokumentasi</h2>
+
+                <!-- Denah Bus -->
+                <div class="doc-card">
+                    <h4>🗺️ Denah Bus</h4>
+                    <div class="documentation-grid">
+                        <div class="doc-image-placeholder">
+                            <img src="denah-bus.jpg" alt="Denah Bus" class="zoomable">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Foto Bus -->
+                <div class="doc-card" style="margin-top:20px;">
+                    <h4>🚌 Foto Bus</h4>
+                    <div class="documentation-grid">
+                        <div class="doc-image-placeholder"><img src="bus1.jpg" alt="Bus 1" class="zoomable"></div>
+                        <div class="doc-image-placeholder"><img src="bus2.jpg" alt="Bus 2" class="zoomable"></div>
+                        <div class="doc-image-placeholder"><img src="bus3.jpg" alt="Bus 3" class="zoomable"></div>
+                        <div class="doc-image-placeholder"><img src="bus4.jpg" alt="Bus 4" class="zoomable"></div>
+                        <div class="doc-image-placeholder"><img src="bus5.jpg" alt="Bus 5" class="zoomable"></div>
+                    </div>
+                </div>
+
+                <!-- Sertifikasi -->
+                <div class="doc-card" style="margin-top:20px;">
+                    <h4>📜 Sertifikasi</h4>
+                    <div class="documentation-grid">
+                        <div class="doc-image-placeholder"><img src="sertifikat1.jpg" alt="Sertifikat 1" class="zoomable"></div>
+                        <div class="doc-image-placeholder"><img src="sertifikat2.jpg" alt="Sertifikat 2" class="zoomable"></div>
+                        <div class="doc-image-placeholder"><img src="sertifikat3.jpg" alt="Sertifikat 3" class="zoomable"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lightbox Modal -->
+            <div id="lightbox" class="lightbox">
+                <span class="close">&times;</span>
+                <img class="lightbox-content" id="lightbox-img">
+                <div id="caption"></div>
+            </div>
+
+    <script>
+        const images = document.querySelectorAll(".zoomable");
+        const lightbox = document.getElementById("lightbox");
+        const lightboxImg = document.getElementById("lightbox-img");
+        const captionText = document.getElementById("caption");
+        const closeBtn = document.querySelector(".lightbox .close");
+
+        images.forEach(img => {
+            img.addEventListener("click", () => {
+                lightbox.style.display = "flex";
+                lightboxImg.src = img.src;
+                captionText.innerHTML = img.alt;
+            });
+        });
+
+        closeBtn.addEventListener("click", () => {
+            lightbox.style.display = "none";
+        });
+
+        lightbox.addEventListener("click", (e) => {
+            if (e.target === lightbox) {
+                lightbox.style.display = "none";
+            }
+        });
+    </script>
+        </div>
+    </div>
+</body>
+</html>
